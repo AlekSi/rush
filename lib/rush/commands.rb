@@ -43,7 +43,7 @@ module Rush::Commands
 
     def self.included(base)
        base.extend ExternalCommands
-       base.add_methods :vim, :mate
+       base.add_methods :vim, :mate, :kate, :gedit
     end
 
     module ExternalCommands
