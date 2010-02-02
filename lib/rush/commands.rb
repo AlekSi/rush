@@ -41,15 +41,21 @@ module Rush::Commands
 		end
 	end
 
-	# Invoke vi on one or more files - only works locally.
-	def vi(*args)
-		names = entries.map { |f| f.quoted_path }.join(' ')
-		system "vim #{names} #{args.join(' ')}"
-	end
+    def self.included(base)
+       base.extend ExternalCommands
+       base.add_methods :vim, :mate
+    end
 
-	# Invoke TextMate on one or more files - only works locally.
-	def mate(*args)
-		names = entries.map { |f| f.quoted_path }.join(' ')
-		system "mate #{names} #{args.join(' ')}"
-	end
+    module ExternalCommands
+       def add_methods(*args)
+         args.each do |method_name|
+           if system "#{method_name} --version > /dev/null 2>&1"
+             define_method(method_name) do |*method_args|
+               names = entries.map { |f| f.quoted_path }.join(' ')
+               system "#{method_name} #{names} #{method_args.join(' ')}"
+             end
+           end
+         end
+       end
+     end
 end
