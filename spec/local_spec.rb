@@ -43,12 +43,12 @@ describe Rush::Connection::Local do
 	end
 
 	it "receive -> rename(path, name, new_name)" do
-		@con.should_receive(:rename).with('path', 'name', 'new_name')
+		@con.should_receive(:rename).with('path', 'name', 'new_name', false)
 		@con.receive(:action => 'rename', :path => 'path', :name => 'name', :new_name => 'new_name')
 	end
 
 	it "receive -> copy(src, dst)" do
-		@con.should_receive(:copy).with('src', 'dst')
+		@con.should_receive(:copy).with('src', 'dst', false)
 		@con.receive(:action => 'copy', :src => 'src', :dst => 'dst')
 	end
 
@@ -58,7 +58,7 @@ describe Rush::Connection::Local do
 	end
 
 	it "receive -> write_archive(archive, dir)" do
-		@con.should_receive(:write_archive).with('archive', 'dir')
+		@con.should_receive(:write_archive).with('archive', 'dir', false)
 		@con.receive(:action => 'write_archive', :dir => 'dir', :payload => 'archive')
 	end
 

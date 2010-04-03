@@ -8,6 +8,11 @@
 #   box['/etc/'].search /localhost/            # entire directory
 #   box['/etc/**/*.conf'].search /localhost/   # arbitrary list
 module Rush::Commands
+	def self.included(base)
+		base.extend(Rush::ExternalCommands)
+		Rush::ExternalCommands::COMMANDS_TO_ADD.each { |command| base.add_command(command) }
+	end
+
 	# The entries command must return an array of Rush::Entry items.  This
 	# varies by class that it is mixed in to.
 	def entries
@@ -41,15 +46,17 @@ module Rush::Commands
 		end
 	end
 
-	# Invoke vi on one or more files - only works locally.
-	def vi(*args)
-		names = entries.map { |f| f.quoted_path }.join(' ')
-		system "vim #{names} #{args.join(' ')}"
-	end
+end
 
-	# Invoke TextMate on one or more files - only works locally.
-	def mate(*args)
-		names = entries.map { |f| f.quoted_path }.join(' ')
-		system "mate #{names} #{args.join(' ')}"
+module Rush::ExternalCommands
+	COMMANDS_TO_ADD = [:vim, :mate, :kate, :gedit]
+
+	def add_command(command)
+		if system("which #{command} > /dev/null 2>&1")
+			define_method(command) do |*args|
+				names = entries.map { |f| f.quoted_path }.join(' ')
+				system("#{command} #{args.join(' ')} #{names}")
+			end
+		end
 	end
 end
