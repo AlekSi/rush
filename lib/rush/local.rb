@@ -349,7 +349,7 @@ class Rush::Connection::Local
 	def close_all_descriptors(keep_open = [])
 		3.upto(256) do |fd|
 			next if keep_open.include?(fd)
-			IO::new(fd).close rescue nil
+			IO::new(fd, "r").close rescue nil
 		end
 	end
 
