@@ -44,4 +44,12 @@ describe Rush::Commands do
 	it "counts lines of the contained files" do
 		@dir.files.line_count.should == 2
 	end
+
+	it "adds external commands when mixed-in" do
+		class SomeNewClass; include Rush::Commands; end
+		obj = SomeNewClass.new
+		Rush::ExternalCommands::COMMANDS_TO_ADD.each do |command|
+			obj.should respond_to(command) if system("#{command} --version > /dev/null 2>&1")
+		end
+	end
 end
