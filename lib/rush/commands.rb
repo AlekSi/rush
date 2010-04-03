@@ -52,7 +52,7 @@ module Rush::ExternalCommands
 	COMMANDS_TO_ADD = [:vim, :mate, :kate, :gedit]
 
 	def add_command(command)
-		if system("#{command} --version > /dev/null 2>&1")
+		if system("which #{command} > /dev/null 2>&1")
 			define_method(command) do |*args|
 				names = entries.map { |f| f.quoted_path }.join(' ')
 				system("#{command} #{args.join(' ')} #{names}")

@@ -49,7 +49,7 @@ describe Rush::Commands do
 		class SomeNewClass; include Rush::Commands; end
 		obj = SomeNewClass.new
 		Rush::ExternalCommands::COMMANDS_TO_ADD.each do |command|
-			obj.should respond_to(command) if system("#{command} --version > /dev/null 2>&1")
+			obj.should respond_to(command) if system("which #{command} > /dev/null 2>&1")
 		end
 	end
 end
